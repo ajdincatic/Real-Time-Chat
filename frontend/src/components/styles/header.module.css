@@ -1,0 +1,14 @@
+.navbar {
+  padding: 20px 0 !important;
+  border-bottom: 5px solid #ccc;
+  height: 90px;
+}
+
+.navItem {
+  border-bottom: 1px solid transparent;
+}
+
+.navItem:hover {
+  border-bottom: 3px solid;
+  transition: 0.2s ease;
+}

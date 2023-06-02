@@ -1,0 +1,23 @@
+.loginWrapper {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.img {
+  width: 80px !important;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.form {
+  width: 35%;
+}
+
+@media only screen and (max-width: 768px) {
+  .form {
+    width: 100%;
+  }
+}

@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa !important;
+  overflow: hidden;
+}
+
+.chat-rooms {
+  border-right: 5px solid #ccc;
+  height: calc(100vh - 90px);
+}
+
+.chat-section {
+  height: calc(100vh - 90px);
+}
+
+.chat-list-item {
+  font-weight: 400;
+}
+
+.chat-list-new-message {
+  font-weight: 600;
+}
