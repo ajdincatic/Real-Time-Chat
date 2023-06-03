@@ -8,7 +8,9 @@ export const endpoints = {
 
 export const routes = {
   LOGIN: `/`,
-  HOME: `/`,
+  REGISTER: `register`,
+  ROOMS: `/`,
+  SELECTED_ROOM: `selected-room`,
 };
 
 export const PASSWORD_RULES =

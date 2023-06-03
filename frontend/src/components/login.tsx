@@ -121,6 +121,9 @@ export const Login = () => {
                 )}
               </Form>
             </div>
+            <p className="text-center mt-2">
+              Don't have account, register now!
+            </p>
           </Container>
         </>
       )}

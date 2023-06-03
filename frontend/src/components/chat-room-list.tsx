@@ -6,15 +6,33 @@ import { useAppDispatch, useAppSelector } from "../shared/custom-hooks";
 import { LoadingSpinner } from "./loading-spinner";
 import { setSelectedRoom } from "../redux/reducers/auth";
 import { SocketContext } from "../context/socket";
+import { useNavigate } from "react-router";
+import { routes } from "../shared/constants";
 
 export const ChatRoomsList = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const socket = useContext(SocketContext);
 
   const { user, selectedRoomId } = useAppSelector((state) => state.auth);
   const { loading, myRooms } = useAppSelector((state) => state.room);
 
   useEffect(() => {
+    if (user !== null) {
+      socket.connect();
+
+      socket.emit("assign-socket-to-user", {
+        userId: user.id,
+      });
+    }
+
+    if (selectedRoomId !== null) {
+      socket.emit("assign-active-room-to-user", {
+        userId: user.id,
+        selectedRoomId,
+      });
+    }
+
     dispatch(getMyRooms());
 
     socket.on("update-rooms-list", (data) => {
@@ -24,8 +42,9 @@ export const ChatRoomsList = () => {
 
     return () => {
       socket.off("update-rooms-list");
+      socket.disconnect();
     };
-  }, [dispatch, socket, user.id]);
+  }, [dispatch, selectedRoomId, socket, user, user.id]);
 
   const renderChatList = () => {
     return myRooms
@@ -67,6 +86,8 @@ export const ChatRoomsList = () => {
       userId: user.id,
       selectedRoomId: item.id,
     });
+
+    navigate(routes.SELECTED_ROOM);
   };
 
   return (

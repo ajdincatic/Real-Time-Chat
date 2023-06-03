@@ -47,7 +47,7 @@ function emitChatEvent(data) {
 
 function updateChatList(userIds, data) {
   for (const id of userIds) {
-    io.to(users[id].socket).emit('update-rooms-list', data);
+    io.to(users[id]?.socket).emit('update-rooms-list', data);
   }
 }
 

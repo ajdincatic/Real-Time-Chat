@@ -37,7 +37,7 @@ export const Header = ({ user }) => {
         className={styles.navbar}
       >
         <Container>
-          <Link to={routes.HOME} onClick={() => setExpanded(false)}>
+          <Link to={routes.ROOMS} onClick={() => setExpanded(false)}>
             <Navbar.Brand>
               <img
                 src="/chat.png"

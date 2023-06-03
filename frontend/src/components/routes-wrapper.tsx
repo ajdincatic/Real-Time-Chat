@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from "react-router";
 import { routes } from "../shared/constants";
-import { HomePageUser } from "./home-page-user";
 import { Login } from "./login";
+import { ChatRoomsList } from "./chat-room-list";
+import { ChatRoom } from "./chat-room";
 
 export const RoutesWrapper = ({ isLoggedIn }) => (
   <Routes>
@@ -11,7 +12,12 @@ export const RoutesWrapper = ({ isLoggedIn }) => (
       </>
     ) : (
       <>
-        <Route index path={routes.HOME} element={<HomePageUser />}></Route>
+        <Route index path={routes.ROOMS} element={<ChatRoomsList />}></Route>
+        <Route
+          index
+          path={`${routes.SELECTED_ROOM}`}
+          element={<ChatRoom />}
+        ></Route>
       </>
     )}
 
