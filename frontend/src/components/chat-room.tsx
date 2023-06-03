@@ -81,7 +81,6 @@ export const ChatRoom = () => {
 
   const handleSendMessage = async () => {
     if (isDisabled) return;
-    console.log(roomIdParam);
 
     if (roomIdParam !== "new") {
       await sendMessage(message, roomId);
@@ -104,13 +103,13 @@ export const ChatRoom = () => {
           <>
             <div className={styles.chatHeader}>
               <div className={styles.chatHeaderData}>
-                <h2>{room?.name ?? "New room"}</h2>
+                <h2>{roomIdParam !== "new" ? room?.name : "New room"}</h2>
                 <p>Online</p>
               </div>
             </div>
 
             <div className={styles.chatMessages}>
-              {messages?.length > 0 ? (
+              {messages?.length > 0 && roomIdParam !== "new" ? (
                 <MessageList
                   referance={messageListRef}
                   className="scrollable"
