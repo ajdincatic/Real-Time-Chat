@@ -10,7 +10,12 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { authReducer, roomReducer, roomMessgesReducer } from "./reducers";
+import {
+  authReducer,
+  roomReducer,
+  roomMessgesReducer,
+  userReducer,
+} from "./reducers";
 
 const persistConfig = {
   key: "root",
@@ -21,6 +26,7 @@ const rootReducers = combineReducers({
   auth: persistReducer(persistConfig, authReducer),
   room: roomReducer,
   roomMessges: roomMessgesReducer,
+  user: userReducer,
 });
 
 export const store = configureStore({

@@ -1,13 +1,22 @@
-export interface TokenPayload {
-  expiresIn: number;
-  accessToken: string;
-}
-
 export interface UserAfterLogin {
   id: string;
   username: string;
   token: string;
   expiresIn: string;
+}
+
+export interface User {
+  entityId: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+}
+
+export interface RegisterUserPayload {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
 }
 
 export interface Room {

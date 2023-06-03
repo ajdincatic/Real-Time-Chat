@@ -5,6 +5,7 @@ import {
   getRoomById,
   addUserToRoomMembersList,
   removeUserFromRoomMembersList,
+  get1on1RoomByMembers,
 } from '../schema/room.schema';
 import {
   getUserDataFromToken,
@@ -138,6 +139,19 @@ router.get('/me', requireAuth, async (req, res) => {
   });
 
   res.status(200).json(roomsOrderedByTimeOfLastMessage);
+});
+
+router.get('/1on1-by-members', requireAuth, async (req, res) => {
+  const { secondUserId } = req.query;
+  const loggedUserId = getUserDataFromToken(req).id;
+
+  const room = await get1on1RoomByMembers(loggedUserId, secondUserId).catch(
+    () => {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  );
+
+  res.status(200).json({ room });
 });
 
 router.get('/:roomId', requireAuth, async (req, res) => {

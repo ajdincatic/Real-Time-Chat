@@ -26,17 +26,19 @@ async function getUserRepository() {
   return repository;
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(loggedUserId) {
   const repository = await getUserRepository();
 
   let users = await repository.search().return.all();
 
-  users = users.map(({ entityId, firstName, lastName, username }) => ({
-    entityId,
-    firstName,
-    lastName,
-    username,
-  }));
+  users = users
+    .map(({ entityId, firstName, lastName, username }) => ({
+      entityId,
+      firstName,
+      lastName,
+      username,
+    }))
+    .filter((el) => el.entityId !== loggedUserId);
 
   return users;
 }

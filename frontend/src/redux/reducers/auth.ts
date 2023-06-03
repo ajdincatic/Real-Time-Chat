@@ -1,16 +1,14 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { endpoints } from "../../shared/constants";
-import { UserAfterLogin } from "../../shared/interfaces";
+import { RegisterUserPayload, UserAfterLogin } from "../../shared/interfaces";
 
 const initialState: {
   loading: boolean;
   user: UserAfterLogin;
-  selectedRoomId: string;
 } = {
   loading: false,
   user: null,
-  selectedRoomId: null,
 };
 
 type LoginPayload = {
@@ -39,12 +37,6 @@ export const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.selectedRoomId = null;
-    },
-    setSelectedRoom: (state, { payload }) => {
-      if (state.selectedRoomId !== payload.id) {
-        state.selectedRoomId = payload.id;
-      }
     },
   },
   extraReducers: (builder) => {
@@ -61,6 +53,16 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, setSelectedRoom } = authSlice.actions;
+export const register = async (data: RegisterUserPayload) => {
+  await axios
+    .post(endpoints.REGISTER, {
+      ...data,
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+};
+
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

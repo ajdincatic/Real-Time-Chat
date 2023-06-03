@@ -1,9 +1,13 @@
 export const endpoints = {
   LOGIN: `user/login`,
+  REGISTER: `user/register`,
   ME: `user/me`,
   MY_ROOMS: `room/me`,
   ROOM_BY_ID: `room/`,
   SEND_MESSAGE: `message/send`,
+  CREATE_ROOM: `room/create`,
+  GET_USERS: `user`,
+  GET_10N1_ROOM_BY_MEMBERS: `room/1on1-by-members`,
 };
 
 export const routes = {

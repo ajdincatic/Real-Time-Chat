@@ -3,19 +3,21 @@ import { routes } from "../shared/constants";
 import { Login } from "./login";
 import { ChatRoomsList } from "./chat-room-list";
 import { ChatRoom } from "./chat-room";
+import { Register } from "./register";
 
 export const RoutesWrapper = ({ isLoggedIn }) => (
   <Routes>
     {!isLoggedIn ? (
       <>
         <Route index path={routes.LOGIN} element={<Login />}></Route>
+        <Route index path={routes.REGISTER} element={<Register />}></Route>
       </>
     ) : (
       <>
         <Route index path={routes.ROOMS} element={<ChatRoomsList />}></Route>
         <Route
           index
-          path={`${routes.SELECTED_ROOM}`}
+          path={`${routes.SELECTED_ROOM}/:roomId`}
           element={<ChatRoom />}
         ></Route>
       </>

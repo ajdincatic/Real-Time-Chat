@@ -11,19 +11,21 @@ function setupSocket(server) {
   });
 
   io.on('connection', async (socket) => {
+    console.log(`Connected ${socket.id}`);
+
     socket.on('assign-socket-to-user', ({ userId }) => {
       users[userId] = { socket: socket.id, room: undefined };
     });
 
-    socket.on('assign-active-room-to-user', ({ selectedRoomId, userId }) => {
-      socket.join(selectedRoomId);
-      users[userId] = { ...users[userId], room: selectedRoomId };
+    socket.on('assign-active-room-to-user', ({ roomId, userId }) => {
+      socket.join(roomId);
+      users[userId] = { ...users[userId], room: roomId };
     });
 
     socket.on('remove-user-from-room', ({ roomId, userId }) => {
       socket.leave(roomId);
       for (const key in users) {
-        if (users[key].room === roomId) {
+        if (users[key] === userId) {
           users[key].room = undefined;
           break;
         }
@@ -37,6 +39,8 @@ function setupSocket(server) {
           break;
         }
       }
+
+      console.log(`Disonnected ${socket.id}`);
     });
   });
 }
@@ -47,7 +51,10 @@ function emitChatEvent(data) {
 
 function updateChatList(userIds, data) {
   for (const id of userIds) {
-    io.to(users[id]?.socket).emit('update-rooms-list', data);
+    // emit just to user that are connected
+    if (users[id]?.socket) {
+      io.to(users[id]?.socket).emit('update-rooms-list', data);
+    }
   }
 }
 

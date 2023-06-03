@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../shared/custom-hooks";
 import {
   addMessage,
+  createRoom,
   getRoomMessages,
   sendMessage,
 } from "../redux/reducers/room-messages";
@@ -12,14 +13,18 @@ import { InputGroup, FormControl, Button } from "react-bootstrap";
 import { Message } from "../shared/interfaces";
 import { SocketContext } from "../context/socket";
 import { isNullOrEmpty } from "../shared/helpers";
+import { useNavigate, useParams } from "react-router";
+import { routes } from "../shared/constants";
 
 export const ChatRoom = () => {
   const messageListRef = useRef<HTMLDivElement>(null);
-
+  const { roomId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const socket = useContext(SocketContext);
-
-  const { user, selectedRoomId } = useAppSelector((state) => state.auth);
+  const [roomIdParam, setRoomIdParam] = useState(null);
+  const [userIdParam, setUserIdParam] = useState(null);
+  const { user } = useAppSelector((state) => state.auth);
   const { loading, room, messages } = useAppSelector(
     (state) => state.roomMessges
   );
@@ -27,19 +32,33 @@ export const ChatRoom = () => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
-    if (selectedRoomId !== null) {
-      dispatch(getRoomMessages({ roomId: selectedRoomId }));
+    const splitParam = roomId.split("-");
+
+    if (splitParam[0] !== "new") {
+      dispatch(getRoomMessages({ roomId }));
+
+      socket.emit("assign-active-room-to-user", {
+        userId: user.id,
+        roomId: roomId,
+      });
 
       socket.on("update-messages-list", (data) => {
         const newMessage = { ...data, sentByMe: data.senderUserId === user.id };
         dispatch(addMessage(newMessage));
       });
-    }
 
-    return () => {
-      socket.off("update-messages-list");
-    };
-  }, [dispatch, selectedRoomId, user, socket]);
+      return () => {
+        socket.off("update-messages-list");
+        socket.emit("remove-user-from-room", {
+          userId: user.id,
+          roomId,
+        });
+      };
+    } else {
+      setRoomIdParam(splitParam[0]);
+      setUserIdParam(splitParam[1]);
+    }
+  }, [dispatch, roomId, user, socket]);
 
   const renderMessagesList = (): any[] => {
     return messages
@@ -62,8 +81,16 @@ export const ChatRoom = () => {
 
   const handleSendMessage = async () => {
     if (isDisabled) return;
+    console.log(roomIdParam);
 
-    await sendMessage(message, selectedRoomId);
+    if (roomIdParam !== "new") {
+      await sendMessage(message, roomId);
+    } else {
+      const response = await createRoom("", [userIdParam]);
+      await sendMessage(message, response.id);
+
+      navigate(`${routes.SELECTED_ROOM}/${response.id}`);
+    }
 
     setMessage("");
   };
@@ -74,48 +101,46 @@ export const ChatRoom = () => {
         <LoadingSpinner />
       ) : (
         <>
-          {selectedRoomId && (
-            <>
-              <div className={styles.chatHeader}>
-                <div className={styles.chatHeaderData}>
-                  <h2>{room?.name}</h2>
-                  <p>Online</p>
-                </div>
+          <>
+            <div className={styles.chatHeader}>
+              <div className={styles.chatHeaderData}>
+                <h2>{room?.name ?? "New room"}</h2>
+                <p>Online</p>
               </div>
+            </div>
 
-              <div className={styles.chatMessages}>
-                {messages?.length > 0 ? (
-                  <MessageList
-                    referance={messageListRef}
-                    className="scrollable"
-                    toBottomHeight={0}
-                    lockable={true}
-                    dataSource={renderMessagesList()}
-                  />
-                ) : (
-                  <p className="text-center mt-5">Write the first message...</p>
-                )}
-              </div>
+            <div className={styles.chatMessages}>
+              {messages?.length > 0 ? (
+                <MessageList
+                  referance={messageListRef}
+                  className="scrollable"
+                  toBottomHeight={0}
+                  lockable={true}
+                  dataSource={renderMessagesList()}
+                />
+              ) : (
+                <p className="text-center mt-5">Write the first message...</p>
+              )}
+            </div>
 
-              <div className={styles.chatInputWrapper}>
-                <InputGroup>
-                  <FormControl
-                    type="text"
-                    placeholder="Type message..."
-                    value={message}
-                    onChange={handleMessageChange}
-                  />
-                  <Button
-                    disabled={isDisabled}
-                    variant="primary"
-                    onClick={handleSendMessage}
-                  >
-                    Send
-                  </Button>
-                </InputGroup>
-              </div>
-            </>
-          )}
+            <div className={styles.chatInputWrapper}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  placeholder="Type message..."
+                  value={message}
+                  onChange={handleMessageChange}
+                />
+                <Button
+                  disabled={isDisabled}
+                  variant="primary"
+                  onClick={handleSendMessage}
+                >
+                  Send
+                </Button>
+              </InputGroup>
+            </div>
+          </>
         </>
       )}
     </>

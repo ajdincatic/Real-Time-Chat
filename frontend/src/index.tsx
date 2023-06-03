@@ -2,6 +2,7 @@ import "./index.css";
 import "./shared/axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-chat-elements/dist/main.css";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";

@@ -71,7 +71,9 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/', requireAuth, async (req, res) => {
-  const users = await getAllUsers().catch(() => {
+  const loggedUserId = getUserDataFromToken(req).id;
+
+  const users = await getAllUsers(loggedUserId).catch(() => {
     return res.status(500).json({ error: 'Internal server error' });
   });
 

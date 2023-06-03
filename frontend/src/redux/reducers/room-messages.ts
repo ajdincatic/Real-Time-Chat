@@ -48,6 +48,12 @@ export const roomMessagesSlice = createSlice({
   },
 });
 
+export const createRoom = async (name: string, memberIds: string[]) => {
+  const response = await axios.post(endpoints.CREATE_ROOM, { name, memberIds });
+
+  return response.data;
+};
+
 export const sendMessage = async (message: string, toRoomId: string) => {
   await axios
     .post(endpoints.SEND_MESSAGE, {

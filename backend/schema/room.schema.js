@@ -46,6 +46,20 @@ export async function getRoomById(roomId) {
   return room;
 }
 
+export async function get1on1RoomByMembers(loggedUserId, secondUserId) {
+  const repository = await getRoomRepository();
+
+  const room = await repository
+    .search()
+    .where('memberIds')
+    .contains(loggedUserId)
+    .and('memberIds')
+    .contains(secondUserId)
+    .return.first();
+
+  return room;
+}
+
 export async function createRoom(data) {
   const repository = await getRoomRepository();
 
