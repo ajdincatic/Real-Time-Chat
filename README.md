@@ -5,7 +5,7 @@ Used technologies:
 <br />
 Backend: Express.js
 <br />
-Frontend - React
+Frontend: React
 <br />
 Database: Redis used with redio-om ORM
 
