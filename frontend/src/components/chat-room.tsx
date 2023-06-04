@@ -15,9 +15,10 @@ import { SocketContext } from "../context/socket";
 import { isNullOrEmpty } from "../shared/helpers";
 import { useNavigate, useParams } from "react-router";
 import { routes } from "../shared/constants";
+import ScrollableFeed from "react-scrollable-feed";
 
 export const ChatRoom = () => {
-  const messageListRef = useRef<HTMLDivElement>(null);
+  const messageListRef = useRef(null);
   const { roomId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -58,6 +59,8 @@ export const ChatRoom = () => {
       setRoomIdParam(splitParam[0]);
       setUserIdParam(splitParam[1]);
     }
+
+    scrollToBottom();
   }, [dispatch, roomId, user, socket]);
 
   const renderMessagesList = (): any[] => {
@@ -72,6 +75,16 @@ export const ChatRoom = () => {
           };
         })
       : [];
+  };
+
+  const scrollToBottom = () => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
   };
 
   const handleMessageChange = (event: any) => {
@@ -110,13 +123,14 @@ export const ChatRoom = () => {
 
             <div className={styles.chatMessages}>
               {messages?.length > 0 && roomIdParam !== "new" ? (
-                <MessageList
-                  referance={messageListRef}
-                  className="scrollable"
-                  toBottomHeight={0}
-                  lockable={true}
-                  dataSource={renderMessagesList()}
-                />
+                <ScrollableFeed>
+                  <MessageList
+                    referance={messageListRef}
+                    toBottomHeight={0}
+                    lockable={true}
+                    dataSource={renderMessagesList()}
+                  />
+                </ScrollableFeed>
               ) : (
                 <p className="text-center mt-5">Write the first message...</p>
               )}

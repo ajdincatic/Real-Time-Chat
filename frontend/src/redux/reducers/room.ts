@@ -28,7 +28,8 @@ export const roomSlice = createSlice({
   initialState,
   reducers: {
     updateRoomsList: (state, { payload }) => {
-      const updatedList = state.myRooms.map((el) => {
+      const findRoom = state.myRooms.find((x) => x.entityId === payload.roomId);
+      let updatedList = state.myRooms.map((el) => {
         if (el.entityId !== payload.roomId) {
           return el;
         }
@@ -36,9 +37,22 @@ export const roomSlice = createSlice({
         return {
           ...el,
           lastMessage: payload,
-          className: "new-message-chat-list",
         };
       });
+
+      if (!findRoom) {
+        updatedList = [
+          ...updatedList,
+          {
+            entityId: payload.roomId,
+            name: payload.senderUsername,
+            lastMessage: payload,
+            creatorId: payload.room.creatorId,
+            is1on1: payload.room.is1on1,
+            memberIds: payload.room.memberIds,
+          },
+        ];
+      }
 
       state.myRooms = updatedList.sort((a, b) => {
         const timestampA = a.lastMessage?.timestamp

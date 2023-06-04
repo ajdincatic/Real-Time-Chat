@@ -11,8 +11,6 @@ function setupSocket(server) {
   });
 
   io.on('connection', async (socket) => {
-    console.log(`Connected ${socket.id}`);
-
     socket.on('assign-socket-to-user', ({ userId }) => {
       users[userId] = { socket: socket.id, room: undefined };
     });
@@ -39,8 +37,6 @@ function setupSocket(server) {
           break;
         }
       }
-
-      console.log(`Disonnected ${socket.id}`);
     });
   });
 }

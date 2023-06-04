@@ -35,6 +35,8 @@ router.post('/send', requireAuth, limiter, async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   });
 
+  messagePayload.room = room;
+
   emitChatEvent(messagePayload);
   updateChatList(room.memberIds, messagePayload);
 

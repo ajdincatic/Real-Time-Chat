@@ -3,8 +3,6 @@ import {
   createRoom,
   getRoomsByUser,
   getRoomById,
-  addUserToRoomMembersList,
-  removeUserFromRoomMembersList,
   get1on1RoomByMembers,
 } from '../schema/room.schema';
 import {
@@ -43,50 +41,6 @@ router.post('/create', requireAuth, limiter, async (req, res) => {
   });
 
   res.status(201).json({ id });
-});
-
-router.patch('/join', requireAuth, limiter, async (req, res) => {
-  let { userId, roomId } = req.body;
-
-  const room = await getRoomById(roomId).catch(() => {
-    return res.status(500).json({ error: 'Internal server error' });
-  });
-
-  if (room.is1on1) {
-    return res.status(500).json({ error: 'Can not join to 1 on 1 chat' });
-  }
-
-  if (checkIfUserIsRoomMember(room, userId)) {
-    return res.status(500).json({ error: 'Already room member' });
-  }
-
-  const id = await addUserToRoomMembersList(roomId, userId);
-
-  res.status(200).json({ id });
-});
-
-router.patch('/leave', requireAuth, limiter, async (req, res) => {
-  let { userId, roomId } = req.body;
-
-  const room = await getRoomById(roomId).catch(() => {
-    return res.status(500).json({ error: 'Internal server error' });
-  });
-
-  if (room.creatorId === userId) {
-    return res.status(500).json({ error: 'Room creator can not leave' });
-  }
-
-  if (room.is1on1) {
-    return res.status(500).json({ error: 'Can not leave 1 on 1 chat' });
-  }
-
-  if (!checkIfUserIsRoomMember(room, userId)) {
-    return res.status(500).json({ error: 'User is not member of this room' });
-  }
-
-  const id = await removeUserFromRoomMembersList(roomId, userId);
-
-  res.status(200).json({ id });
 });
 
 router.get('/me', requireAuth, async (req, res) => {

@@ -69,29 +69,3 @@ export async function createRoom(data) {
 
   return id;
 }
-
-export async function addUserToRoomMembersList(roomId, userId) {
-  const repository = await getRoomRepository();
-
-  const room = await getRoomById(roomId);
-
-  // ensure that can not be 2 same Ids
-  room.memberIds = room.memberIds.filter((x) => x !== userId);
-  room.memberIds = [...room.memberIds, userId];
-
-  const id = await repository.save(room);
-
-  return id;
-}
-
-export async function removeUserFromRoomMembersList(roomId, userId) {
-  const repository = await getRoomRepository();
-
-  const room = await getRoomById(roomId);
-
-  room.memberIds = room.memberIds.filter((x) => x !== userId);
-
-  const id = await repository.save(room);
-
-  return id;
-}

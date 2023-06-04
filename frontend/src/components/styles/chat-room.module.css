@@ -11,8 +11,6 @@
 }
 
 .chatMessages {
-  padding: 20px;
-  overflow-y: auto;
   height: calc(100vh - 260px); /* header 90px, chat header 100px, input 70px */
 }
 
