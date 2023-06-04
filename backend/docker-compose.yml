@@ -1,0 +1,12 @@
+version: '1'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/real-time-chat-backend
+    env_file:
+      - .env

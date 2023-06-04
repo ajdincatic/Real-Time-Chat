@@ -33,7 +33,7 @@
   "scripts": {
     "start": "env-cmd -f .env react-scripts start",
     "build": "env-cmd -f .env react-scripts build",
-    "rebuild": "rm -rf build && npm run build && rm -rf webapp && mv build webapp",
+    "rebuild": "rm -rf build && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
