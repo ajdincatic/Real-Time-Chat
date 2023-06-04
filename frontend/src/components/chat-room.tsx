@@ -59,8 +59,6 @@ export const ChatRoom = () => {
       setRoomIdParam(splitParam[0]);
       setUserIdParam(splitParam[1]);
     }
-
-    scrollToBottom();
   }, [dispatch, roomId, user, socket]);
 
   const renderMessagesList = (): any[] => {
@@ -75,16 +73,6 @@ export const ChatRoom = () => {
           };
         })
       : [];
-  };
-
-  const scrollToBottom = () => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
-    }
   };
 
   const handleMessageChange = (event: any) => {

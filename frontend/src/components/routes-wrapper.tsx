@@ -10,13 +10,12 @@ export const RoutesWrapper = ({ isLoggedIn }) => (
     {!isLoggedIn ? (
       <>
         <Route index path={routes.LOGIN} element={<Login />}></Route>
-        <Route index path={routes.REGISTER} element={<Register />}></Route>
+        <Route path={routes.REGISTER} element={<Register />}></Route>
       </>
     ) : (
       <>
         <Route index path={routes.ROOMS} element={<ChatRoomsList />}></Route>
         <Route
-          index
           path={`${routes.SELECTED_ROOM}/:roomId`}
           element={<ChatRoom />}
         ></Route>
